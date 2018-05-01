@@ -26,20 +26,21 @@ void ofApp::setup(){
     kinect.setup();
     kinect.setRegister(true);
     kinect.setMirror(true);
-    kinect.addImageGenerator();
+    //kinect.addImageGenerator();
     kinect.addDepthGenerator();
+    kinect.addHandsGenerator();
+    kinect.addAllHandFocusGestures();
+    kinect.setMaxNumHands(2);
+    
+    kinect.getDepthGenerator().GetAlternativeViewPointCap().SetViewPoint(kinect.getImageGenerator());
     
     kinect.addHandsGenerator();
     kinect.addAllGestures();
     kinect.setMaxNumHands(1);
     
     kinect.start();
-    
-    minDist = 240; maxDist = 350;
-    //shadowImage.allocate(640,480);
-    //invertImage.allocate(640,480);
     //Kinect end
-    
+
     
     //Circle start
     for(int i=0;i<50;i++){
@@ -67,19 +68,35 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    //Kinect start
     kinect.update();
-    /*unsigned char *depthData = kinect.getDepthPixels().getData();
-     unsigned char *shadowData = shadowImage.getPixels().getData();
-     for (int k = 0; k < 640*480; k++){
-     shadowData[k] = (minDist < depthData[k] && depthData[k] < maxDist)? 0: 255;
-     }
-     shadowImage.flagImageChanged();
-     invertImage = shadowImage;*/
+    unsigned char *maskedImageData = maskedImage.getPixels().getData();
+    unsigned char *imageData=kinect.getImagePixels().getData();
+    unsigned short *depthData = kinect.getDepthRawPixels().getData();
+    
+    for(int k=0;k<640*480;k++){
+        maskedImageData[k*4+0]=imageData[k*3+0];
+        maskedImageData[k*4+1]=imageData[k*3+1];
+        maskedImageData[k*4+2]=imageData[k*3+2];
+        
+        if(300 <= depthData[k] && depthData[k]<500){
+            maskedImageData[k*4+3]=255;
+        }else{
+            maskedImageData[k*4+3]=0;
+        }
+    }
+    maskedImage.setFromPixels(maskedImageData,640,480,OF_IMAGE_GRAYSCALE);
+    //kinect end
     
     
     //Circle start
     for(int i=0;i<50;i++){
         Cpos[i].y+=Cvel[i]+(i+5)/50;
+        if(Cpos[i].y>ofGetHeight()+200){
+            Cpos[i].y=-200;
+            Cpos[i].x=ofRandom(ofGetWidth());
+            Cvel[i]=ofRandom(8);
+        }
     }
     //Circle end
     
@@ -87,6 +104,12 @@ void ofApp::update(){
     //Moji start
     for(int i=0;i<30;i++){
         Mpos[i].y+=Mvel[i]-(i+10)/50;
+        if(Mpos[i].y<0){
+            fontSize = ofRandom(20,100);
+            Mpos[i].y=ofGetHeight()+150;
+            Mpos[i].x=ofRandom(ofGetWidth());
+            Mvel[i]=-1*ofRandom(6);
+        }
     }
     //Moji end
     
@@ -95,19 +118,24 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    //Kinect start
     ofSetColor(255);
+    maskedImage.draw(0,0,640,480);
+    if(kinect.getNumTrackedHands()>0){
+        for(int i=0; i<kinect.getNumTrackedHands();i++){
+            ofxOpenNIHand hand = kinect.getTrackedHand(i);
+            ofPoint p = hand.getPosition();
+            
+            ofDrawCircle(p.x, p.y, 20);
+        }
+    }
     
-    //invertImage.draw(0, 0,640,480);
+    //Kinect end
     
     
     //Circle start
     ofSetColor(150,100);
     for(int i=0;i<50;i++){
-        if(Cpos[i].y>ofGetHeight()+200){
-            Cpos[i].y=-200;
-            Cpos[i].x=ofRandom(ofGetWidth());
-            Cvel[i]=ofRandom(8);
-        }
         r=i*2.5;
         ofDrawCircle(Cpos[i].x,Cpos[i].y,r);
     }
@@ -116,14 +144,6 @@ void ofApp::draw(){
     
     //Moji start
     ofSetColor(0);
-    for(int i=0;i<30;i++){
-        if(Mpos[i].y<0){
-            fontSize = ofRandom(20,100);
-            Mpos[i].y=ofGetHeight()+150;
-            Mpos[i].x=ofRandom(ofGetWidth());
-            Mvel[i]=-1*ofRandom(6);
-        }
-    }
     font[0].drawString("あ",Mpos[0].x,Mpos[0].y);
     font[1].drawString("い",Mpos[1].x,Mpos[1].y);
     font[2].drawString("う",Mpos[2].x,Mpos[2].y);

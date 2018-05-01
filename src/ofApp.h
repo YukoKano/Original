@@ -3,14 +3,12 @@
 #include "ofMain.h"
 #include "ofxOpenNI.h"
 #include "ofxTrueTypeFontUC.h"
-//#include "ofxKinect.h"
-//#include "ofxOpenCv.h"
 
 class ofApp : public ofBaseApp{
-    
-    //ofxOpenNI
+
 private:
     ofxOpenNI kinect;
+    ofImage maskedImage;
     ofxTrueTypeFontUC font[50];
     
 public:
@@ -29,9 +27,6 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-    
-    unsigned int minDist, maxDist;
-    //ofxCvGrayscaleImage shadowImage, invertImage;
     
     
     ofSoundPlayer soundplayer[7];
