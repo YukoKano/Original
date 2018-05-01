@@ -31,12 +31,12 @@ public:
     
     ofSoundPlayer soundplayer[7];
     
-    ofVec2f Cpos[50];
+    ofVec2f Cpos[30];
     ofVec2f Mpos[30];
-    float Cvel[50];
+    float Cvel[30];
     float Mvel[30];
     float r;
-    int a;
+
     int fontSize;
 };
 

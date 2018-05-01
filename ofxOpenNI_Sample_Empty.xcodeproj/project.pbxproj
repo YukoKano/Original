@@ -671,7 +671,7 @@
 					../../../addons/ofxOpenNI/libs/include/openni/Win32,
 					../../../addons/ofxOpenNI/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
@@ -716,7 +716,7 @@
 					../../../addons/ofxOpenNI/libs/include/openni/Win32,
 					../../../addons/ofxOpenNI/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-mtune=native",

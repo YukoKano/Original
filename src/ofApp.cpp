@@ -3,14 +3,13 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetWindowShape(640, 480);
     ofBackground(255);
     ofEnableAlphaBlending();
     ofSetCircleResolution(30);
-    ofSetFrameRate(60);
-    ofSetWindowShape(640, 480);
-    
-    
-    
+    ofSetFrameRate(30);
+
+
     //Sound start
     soundplayer[0].load("do.mp3");
     soundplayer[1].load("re.mp3");
@@ -26,19 +25,22 @@ void ofApp::setup(){
     kinect.setup();
     kinect.setRegister(true);
     kinect.setMirror(true);
-    //kinect.addImageGenerator();
+
     kinect.addDepthGenerator();
-    kinect.addHandsGenerator();
-    kinect.addAllHandFocusGestures();
-    kinect.setMaxNumHands(2);
-    
+    kinect.addImageGenerator();
     kinect.getDepthGenerator().GetAlternativeViewPointCap().SetViewPoint(kinect.getImageGenerator());
     
+    kinect.setUseDepthRawPixels(true);
+    
     kinect.addHandsGenerator();
-    kinect.addAllGestures();
+    kinect.addAllHandFocusGestures();
     kinect.setMaxNumHands(1);
     
     kinect.start();
+    
+    maskedImage.allocate(640, 480, OF_IMAGE_COLOR_ALPHA);
+
+    
     //Kinect end
 
     
@@ -68,29 +70,8 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    //Kinect start
-    kinect.update();
-    unsigned char *maskedImageData = maskedImage.getPixels().getData();
-    unsigned char *imageData=kinect.getImagePixels().getData();
-    unsigned short *depthData = kinect.getDepthRawPixels().getData();
-    
-    for(int k=0;k<640*480;k++){
-        maskedImageData[k*4+0]=imageData[k*3+0];
-        maskedImageData[k*4+1]=imageData[k*3+1];
-        maskedImageData[k*4+2]=imageData[k*3+2];
-        
-        if(300 <= depthData[k] && depthData[k]<500){
-            maskedImageData[k*4+3]=255;
-        }else{
-            maskedImageData[k*4+3]=0;
-        }
-    }
-    maskedImage.setFromPixels(maskedImageData,640,480,OF_IMAGE_GRAYSCALE);
-    //kinect end
-    
-    
     //Circle start
-    for(int i=0;i<50;i++){
+    for(int i=0;i<30;i++){
         Cpos[i].y+=Cvel[i]+(i+5)/50;
         if(Cpos[i].y>ofGetHeight()+200){
             Cpos[i].y=-200;
@@ -99,6 +80,27 @@ void ofApp::update(){
         }
     }
     //Circle end
+    
+    
+    //Kinect start
+    kinect.update();
+    unsigned char *maskedImageData = maskedImage.getPixels().getData();
+    unsigned char *imageData=kinect.getImagePixels().getData();
+    unsigned short *depthData = kinect.getDepthRawPixels().getData();
+    
+    for(int k=0; k<640*480; k++){
+        maskedImageData[k*4+0]=imageData[k*3+0];
+        maskedImageData[k*4+1]=imageData[k*3+1];
+        maskedImageData[k*4+2]=imageData[k*3+2];
+        
+        if(400 <= depthData[k] && depthData[k]<600){
+            maskedImageData[k*4+3]=255;
+        }else{
+            maskedImageData[k*4+3]=0;
+        }
+    }
+    maskedImage.setFromPixels(maskedImageData,640,480,OF_IMAGE_COLOR_ALPHA);
+    //kinect end
     
     
     //Moji start
@@ -118,28 +120,25 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    //Circle start
+    ofSetColor(150,100);
+    for(int i=0;i<30;i++){
+        r=i*2.5;
+        ofDrawCircle(Cpos[i].x,Cpos[i].y,r);
+    }
+    //Circle end
+    
+    
     //Kinect start
-    ofSetColor(255);
     maskedImage.draw(0,0,640,480);
     if(kinect.getNumTrackedHands()>0){
         for(int i=0; i<kinect.getNumTrackedHands();i++){
             ofxOpenNIHand hand = kinect.getTrackedHand(i);
             ofPoint p = hand.getPosition();
-            
             ofDrawCircle(p.x, p.y, 20);
         }
     }
-    
     //Kinect end
-    
-    
-    //Circle start
-    ofSetColor(150,100);
-    for(int i=0;i<50;i++){
-        r=i*2.5;
-        ofDrawCircle(Cpos[i].x,Cpos[i].y,r);
-    }
-    //Circle end
     
     
     //Moji start
