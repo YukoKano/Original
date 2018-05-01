@@ -18,6 +18,9 @@ void ofApp::setup(){
     soundplayer[4].load("so.mp3");
     soundplayer[5].load("ra.mp3");
     soundplayer[6].load("si.mp3");
+    for(int i=0; i<7; i++){
+        soundplayer[i].setVolume(0.8);
+    }
     //Sound end
     
     
@@ -93,7 +96,7 @@ void ofApp::update(){
         maskedImageData[k*4+1]=imageData[k*3+1];
         maskedImageData[k*4+2]=imageData[k*3+2];
         
-        if(400 <= depthData[k] && depthData[k]<600){
+        if(300 <= depthData[k] && depthData[k]<600){
             maskedImageData[k*4+3]=255;
         }else{
             maskedImageData[k*4+3]=0;
@@ -130,14 +133,8 @@ void ofApp::draw(){
     
     
     //Kinect start
+    ofSetColor(10,255);
     maskedImage.draw(0,0,640,480);
-    if(kinect.getNumTrackedHands()>0){
-        for(int i=0; i<kinect.getNumTrackedHands();i++){
-            ofxOpenNIHand hand = kinect.getTrackedHand(i);
-            ofPoint p = hand.getPosition();
-            ofDrawCircle(p.x, p.y, 20);
-        }
-    }
     //Kinect end
     
     
@@ -177,8 +174,20 @@ void ofApp::draw(){
     
     
     //Sound start
-    
-    
+    if(kinect.getNumTrackedHands()>0){
+        for(int i=0; i<kinect.getNumTrackedHands();i++){
+            
+            ofxOpenNIHand hand = kinect.getTrackedHand(i);
+            ofPoint p = hand.getPosition();
+            ofSetColor(150,100);
+            ofDrawCircle(p.x, p.y, 20);
+            /* int j = ofRandom(30);
+            if(Mpos[j].x-10<p.x && p.x<Mpos[j].x+10 && Mpos[j].y-10<p.y && p.y<Mpos[j].y+10){
+                    int a = ofRandom(7);
+                    soundplayer[a].play();
+            } */
+        }
+    }
     
     //Sound end
     
