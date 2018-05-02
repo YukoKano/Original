@@ -8,20 +8,15 @@ void ofApp::setup(){
     ofEnableAlphaBlending();
     ofSetCircleResolution(30);
     ofSetFrameRate(30);
-
-
-    //Sound start
-    soundplayer[0].load("do.mp3");
-    soundplayer[1].load("re.mp3");
-    soundplayer[2].load("mi.mp3");
-    soundplayer[3].load("fa.mp3");
-    soundplayer[4].load("so.mp3");
-    soundplayer[5].load("ra.mp3");
-    soundplayer[6].load("si.mp3");
-    for(int i=0; i<7; i++){
-        soundplayer[i].setVolume(0.8);
+    
+    
+    //Circle start
+    for(int i=0;i<50;i++){
+        Cpos[i].x=ofRandom(ofGetWidth());
+        Cpos[i].y=ofRandom(ofGetHeight());
+        Cvel[i]=ofRandom(8);
     }
-    //Sound end
+    //Circle end
     
     
     //Kinect start
@@ -47,15 +42,6 @@ void ofApp::setup(){
     //Kinect end
 
     
-    //Circle start
-    for(int i=0;i<50;i++){
-        Cpos[i].x=ofRandom(ofGetWidth());
-        Cpos[i].y=ofRandom(ofGetHeight());
-        Cvel[i]=ofRandom(8);
-    }
-    //Circle end
-    
-    
     //Moji start
     for(int i=0;i<30;i++){
         fontSize = ofRandom(20,100);
@@ -67,15 +53,22 @@ void ofApp::setup(){
     //Moji end
     
     
-    
-    
+    //Sound start
+    soundplayer[0].load("do.mp3");
+    soundplayer[1].load("re.mp3");
+    soundplayer[2].load("mi.mp3");
+    soundplayer[3].load("fa.mp3");
+    soundplayer[4].load("so.mp3");
+    soundplayer[5].load("ra.mp3");
+    soundplayer[6].load("si.mp3");
+    //Sound end
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     //Circle start
     for(int i=0;i<30;i++){
-        Cpos[i].y+=Cvel[i]+(i+5)/50;
+        Cpos[i].y+=Cvel[i]+(i+5)/60;
         if(Cpos[i].y>ofGetHeight()+200){
             Cpos[i].y=-200;
             Cpos[i].x=ofRandom(ofGetWidth());
@@ -108,7 +101,7 @@ void ofApp::update(){
     
     //Moji start
     for(int i=0;i<30;i++){
-        Mpos[i].y+=Mvel[i]-(i+10)/50;
+        Mpos[i].y+=Mvel[i]-(i+10)/60;
         if(Mpos[i].y<0){
             fontSize = ofRandom(20,100);
             Mpos[i].y=ofGetHeight()+150;
@@ -134,7 +127,7 @@ void ofApp::draw(){
     
     //Kinect start
     ofSetColor(10,255);
-    maskedImage.draw(0,0,640,480);
+    maskedImage.draw(-30,-20,640,480); //描かれないところがあるので、中心に持ってきた
     //Kinect end
     
     
@@ -180,20 +173,22 @@ void ofApp::draw(){
             ofxOpenNIHand hand = kinect.getTrackedHand(i);
             ofPoint p = hand.getPosition();
             ofSetColor(150,100);
-            ofDrawCircle(p.x, p.y, 20);
-            /* int j = ofRandom(30);
-            if(Mpos[j].x-10<p.x && p.x<Mpos[j].x+10 && Mpos[j].y-10<p.y && p.y<Mpos[j].y+10){
-                    int a = ofRandom(7);
-                    soundplayer[a].play();
-            } */
+            ofDrawCircle(p.x-30, p.y-20, 20); //画面のズレの補正　消すかも
+            int j = ofRandom(30);
+            if(Mpos[j].x-30<p.x && p.x<Mpos[j].x+30 && Mpos[j].y-30<p.y && p.y<Mpos[j].y+30){
+                int a = ofRandom(7); //ここから下検討中
+                soundplayer[a].play();
+                font[j].loadFont("Batang.ttf", 0); //文字消したいor画面外に出た後にリセットする 現段階ゴミみたいになる
+                ofSetColor(200, 40, 100);
+                ofDrawCircle(Mpos[j].x, Mpos[j].y, ofRandom(80)); //徐々に消えていくとか？
+            }
         }
     }
-    
     //Sound end
     
     
     //FrameRateを描いてくれるやつ
-    ofDrawBitmapString(ofToString(ofGetFrameRate()), 10,10);
+    //ofDrawBitmapString(ofToString(ofGetFrameRate()), 10,10);
     
     
 }
