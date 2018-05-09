@@ -13,7 +13,7 @@ void ofApp::setup(){
     //Circle start
     for(int i=0;i<50;i++){
         Cpos[i].x=ofRandom(ofGetWidth());
-        Cpos[i].y=ofRandom(ofGetHeight());
+        Cpos[i].y=ofRandom(0,ofGetHeight()-100);
         Cvel[i]=ofRandom(8);
     }
     //Circle end
@@ -44,23 +44,25 @@ void ofApp::setup(){
     
     //Moji start
     for(int i=0;i<30;i++){
-        fontSize = ofRandom(20,100);
+        fontSize = ofRandom(20,80);
         font[i].loadFont("Batang.ttf",fontSize);
         Mpos[i].x=ofRandom(ofGetWidth());
         Mpos[i].y=ofRandom(ofGetHeight());
         Mvel[i]=-1*ofRandom(6);
     }
+    
     //Moji end
     
     
     //Sound start
-    soundplayer[0].load("do.mp3");
-    soundplayer[1].load("re.mp3");
-    soundplayer[2].load("mi.mp3");
-    soundplayer[3].load("fa.mp3");
-    soundplayer[4].load("so.mp3");
-    soundplayer[5].load("ra.mp3");
-    soundplayer[6].load("si.mp3");
+    soundplayer[0].load("do1.mp3");
+    soundplayer[1].load("re1.mp3");
+    soundplayer[2].load("mi1.mp3");
+    soundplayer[3].load("fa1.mp3");
+    soundplayer[4].load("so1.mp3");
+    soundplayer[5].load("ra1.mp3");
+    soundplayer[6].load("si1.mp3");
+    soundplayer[7].load("do2.mp3");
     //Sound end
 }
 
@@ -72,7 +74,7 @@ void ofApp::update(){
         if(Cpos[i].y>ofGetHeight()+200){
             Cpos[i].y=-200;
             Cpos[i].x=ofRandom(ofGetWidth());
-            Cvel[i]=ofRandom(8);
+            Cvel[i]=ofRandom(2,6);
         }
     }
     //Circle end
@@ -101,12 +103,11 @@ void ofApp::update(){
     
     //Moji start
     for(int i=0;i<30;i++){
-        Mpos[i].y+=Mvel[i]-(i+10)/60;
+        Mpos[i].y+=Mvel[i]-(i+20)/20;
         if(Mpos[i].y<0){
-            fontSize = ofRandom(20,100);
             Mpos[i].y=ofGetHeight()+150;
             Mpos[i].x=ofRandom(ofGetWidth());
-            Mvel[i]=-1*ofRandom(6);
+            Mvel[i]=-1*ofRandom(1, 3);
         }
     }
     //Moji end
@@ -119,7 +120,7 @@ void ofApp::draw(){
     //Circle start
     ofSetColor(150,100);
     for(int i=0;i<30;i++){
-        r=i*2.5;
+        r=(i+2)*3;
         ofDrawCircle(Cpos[i].x,Cpos[i].y,r);
     }
     //Circle end
@@ -169,18 +170,52 @@ void ofApp::draw(){
     //Sound start
     if(kinect.getNumTrackedHands()>0){
         for(int i=0; i<kinect.getNumTrackedHands();i++){
-            
             ofxOpenNIHand hand = kinect.getTrackedHand(i);
             ofPoint p = hand.getPosition();
             ofSetColor(150,100);
-            ofDrawCircle(p.x-30, p.y-20, 20); //画面のズレの補正　消すかも
-            int j = ofRandom(30);
-            if(Mpos[j].x-30<p.x && p.x<Mpos[j].x+30 && Mpos[j].y-30<p.y && p.y<Mpos[j].y+30){
-                int a = ofRandom(7); //ここから下検討中
-                soundplayer[a].play();
-                font[j].loadFont("Batang.ttf", 0); //文字消したいor画面外に出た後にリセットする 現段階ゴミみたいになる
-                ofSetColor(200, 40, 100);
-                ofDrawCircle(Mpos[j].x, Mpos[j].y, ofRandom(80)); //徐々に消えていくとか？
+            ofDrawCircle(p.x-30, p.y-20, 20); //画面のズレの補正　消す
+            
+            for(int j=0;j<30;j++){
+            if(Mpos[j].x-20<p.x && p.x<Mpos[j].x+60 && Mpos[j].y-20<p.y && p.y<Mpos[j].y+60){
+                int a = ofRandom(8);
+                soundplayer[a].play(); //一回なってほしいのになんどもなる
+                font[j].unloadFont();//文字消したいor画面外に出た後にリセットする できない
+                if(Mpos[j].y<0){
+                    font[j].reloadFont();
+                    font[0].drawString("あ",Mpos[0].x,Mpos[0].y);
+                    font[1].drawString("い",Mpos[1].x,Mpos[1].y);
+                    font[2].drawString("う",Mpos[2].x,Mpos[2].y);
+                    font[3].drawString("え",Mpos[3].x,Mpos[3].y);
+                    font[4].drawString("お",Mpos[4].x,Mpos[4].y);
+                    font[5].drawString("か",Mpos[5].x,Mpos[5].y);
+                    font[6].drawString("き",Mpos[6].x,Mpos[6].y);
+                    font[7].drawString("く",Mpos[7].x,Mpos[7].y);
+                    font[8].drawString("け",Mpos[8].x,Mpos[8].y);
+                    font[9].drawString("こ",Mpos[9].x,Mpos[9].y);
+                    font[10].drawString("さ",Mpos[10].x,Mpos[10].y);
+                    font[11].drawString("し",Mpos[11].x,Mpos[11].y);
+                    font[12].drawString("す",Mpos[12].x,Mpos[12].y);
+                    font[13].drawString("せ",Mpos[13].x,Mpos[13].y);
+                    font[14].drawString("そ",Mpos[14].x,Mpos[14].y);
+                    font[15].drawString("た",Mpos[15].x,Mpos[15].y);
+                    font[16].drawString("ち",Mpos[16].x,Mpos[16].y);
+                    font[17].drawString("つ",Mpos[17].x,Mpos[17].y);
+                    font[18].drawString("て",Mpos[18].x,Mpos[18].y);
+                    font[19].drawString("と",Mpos[19].x,Mpos[19].y);
+                    font[20].drawString("な",Mpos[20].x,Mpos[20].y);
+                    font[21].drawString("に",Mpos[21].x,Mpos[21].y);
+                    font[22].drawString("ぬ",Mpos[22].x,Mpos[22].y);
+                    font[23].drawString("ね",Mpos[23].x,Mpos[23].y);
+                    font[24].drawString("の",Mpos[24].x,Mpos[24].y);
+                    font[25].drawString("は",Mpos[25].x,Mpos[25].y);
+                    font[26].drawString("ひ",Mpos[26].x,Mpos[26].y);
+                    font[27].drawString("ふ",Mpos[27].x,Mpos[27].y);
+                    font[28].drawString("へ",Mpos[28].x,Mpos[28].y);
+                    font[29].drawString("ほ",Mpos[29].x,Mpos[29].y);
+                } //うまく動かない 消えたまま出てきて手に認識されて音が出てしまう
+                ofSetColor(200, 40, 100,200);
+                ofDrawCircle(Mpos[j].x, Mpos[j].y,30);
+            }
             }
         }
     }

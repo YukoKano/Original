@@ -29,7 +29,7 @@ public:
     void gotMessage(ofMessage msg);
     
     
-    ofSoundPlayer soundplayer[7];
+    ofSoundPlayer soundplayer[8];
     
     ofVec2f Cpos[30];
     ofVec2f Mpos[30];
@@ -37,7 +37,7 @@ public:
     float Mvel[30];
     float r;
 
-    int fontSize;
+    int fontSize = ofRandom(20,80);
 };
 
 
