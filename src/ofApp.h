@@ -32,12 +32,15 @@ public:
     ofSoundPlayer soundplayer[8];
     
     ofVec2f Cpos[30];
-    ofVec2f Mpos[30];
+    ofVec2f Mpos[24];
     float Cvel[30];
-    float Mvel[30];
+    float Mvel[24];
     float r;
 
-    int fontSize = ofRandom(20,80);
+    float fontSize[24]{20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,88,92,96};
+    
+    int i;
+    int a = i%3;
 };
 
 

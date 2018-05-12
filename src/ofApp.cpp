@@ -11,7 +11,7 @@ void ofApp::setup(){
     
     
     //Circle start
-    for(int i=0;i<50;i++){
+    for(int i=0;i<30;i++){
         Cpos[i].x=ofRandom(ofGetWidth());
         Cpos[i].y=ofRandom(0,ofGetHeight()-100);
         Cvel[i]=ofRandom(8);
@@ -43,9 +43,8 @@ void ofApp::setup(){
 
     
     //Moji start
-    for(int i=0;i<30;i++){
-        fontSize = ofRandom(20,80);
-        font[i].loadFont("Batang.ttf",fontSize);
+    for(int i=0;i<24;i++){
+        font[i].loadFont("Batang.ttf",fontSize[i]);
         Mpos[i].x=ofRandom(ofGetWidth());
         Mpos[i].y=ofRandom(ofGetHeight());
         Mvel[i]=-1*ofRandom(6);
@@ -63,6 +62,12 @@ void ofApp::setup(){
     soundplayer[5].load("ra1.mp3");
     soundplayer[6].load("si1.mp3");
     soundplayer[7].load("do2.mp3");
+    
+    for (int i=0; i<8; i++) {
+        soundplayer[i].setLoop(false);
+    }
+    
+    
     //Sound end
 }
 
@@ -102,7 +107,7 @@ void ofApp::update(){
     
     
     //Moji start
-    for(int i=0;i<30;i++){
+    for(int i=0;i<24;i++){
         Mpos[i].y+=Mvel[i]-(i+20)/20;
         if(Mpos[i].y<0){
             Mpos[i].y=ofGetHeight()+150;
@@ -111,6 +116,10 @@ void ofApp::update(){
         }
     }
     //Moji end
+    
+    for (int i=0; i<24; i++){
+            soundplayer[a].setVolume(ofMap(fontSize[i], 20, 96, 0.3, 1.0));
+    }
     
     
 }
@@ -158,73 +167,44 @@ void ofApp::draw(){
     font[21].drawString("に",Mpos[21].x,Mpos[21].y);
     font[22].drawString("ぬ",Mpos[22].x,Mpos[22].y);
     font[23].drawString("ね",Mpos[23].x,Mpos[23].y);
-    font[24].drawString("の",Mpos[24].x,Mpos[24].y);
-    font[25].drawString("は",Mpos[25].x,Mpos[25].y);
-    font[26].drawString("ひ",Mpos[26].x,Mpos[26].y);
-    font[27].drawString("ふ",Mpos[27].x,Mpos[27].y);
-    font[28].drawString("へ",Mpos[28].x,Mpos[28].y);
-    font[29].drawString("ほ",Mpos[29].x,Mpos[29].y);
     //Moji end
     
     
     //Sound start
     if(kinect.getNumTrackedHands()>0){
-        for(int i=0; i<kinect.getNumTrackedHands();i++){
-            ofxOpenNIHand hand = kinect.getTrackedHand(i);
+        for(int k=0; k<kinect.getNumTrackedHands();k++){
+            ofxOpenNIHand hand = kinect.getTrackedHand(k);
             ofPoint p = hand.getPosition();
-            ofSetColor(150,100);
-            ofDrawCircle(p.x-30, p.y-20, 20); //画面のズレの補正　消す
             
-            for(int j=0;j<30;j++){
-            if(Mpos[j].x-20<p.x && p.x<Mpos[j].x+60 && Mpos[j].y-20<p.y && p.y<Mpos[j].y+60){
-                int a = ofRandom(8);
-                soundplayer[a].play(); //一回なってほしいのになんどもなる
-                font[j].unloadFont();//文字消したいor画面外に出た後にリセットする できない
-                if(Mpos[j].y<0){
-                    font[j].reloadFont();
-                    font[0].drawString("あ",Mpos[0].x,Mpos[0].y);
-                    font[1].drawString("い",Mpos[1].x,Mpos[1].y);
-                    font[2].drawString("う",Mpos[2].x,Mpos[2].y);
-                    font[3].drawString("え",Mpos[3].x,Mpos[3].y);
-                    font[4].drawString("お",Mpos[4].x,Mpos[4].y);
-                    font[5].drawString("か",Mpos[5].x,Mpos[5].y);
-                    font[6].drawString("き",Mpos[6].x,Mpos[6].y);
-                    font[7].drawString("く",Mpos[7].x,Mpos[7].y);
-                    font[8].drawString("け",Mpos[8].x,Mpos[8].y);
-                    font[9].drawString("こ",Mpos[9].x,Mpos[9].y);
-                    font[10].drawString("さ",Mpos[10].x,Mpos[10].y);
-                    font[11].drawString("し",Mpos[11].x,Mpos[11].y);
-                    font[12].drawString("す",Mpos[12].x,Mpos[12].y);
-                    font[13].drawString("せ",Mpos[13].x,Mpos[13].y);
-                    font[14].drawString("そ",Mpos[14].x,Mpos[14].y);
-                    font[15].drawString("た",Mpos[15].x,Mpos[15].y);
-                    font[16].drawString("ち",Mpos[16].x,Mpos[16].y);
-                    font[17].drawString("つ",Mpos[17].x,Mpos[17].y);
-                    font[18].drawString("て",Mpos[18].x,Mpos[18].y);
-                    font[19].drawString("と",Mpos[19].x,Mpos[19].y);
-                    font[20].drawString("な",Mpos[20].x,Mpos[20].y);
-                    font[21].drawString("に",Mpos[21].x,Mpos[21].y);
-                    font[22].drawString("ぬ",Mpos[22].x,Mpos[22].y);
-                    font[23].drawString("ね",Mpos[23].x,Mpos[23].y);
-                    font[24].drawString("の",Mpos[24].x,Mpos[24].y);
-                    font[25].drawString("は",Mpos[25].x,Mpos[25].y);
-                    font[26].drawString("ひ",Mpos[26].x,Mpos[26].y);
-                    font[27].drawString("ふ",Mpos[27].x,Mpos[27].y);
-                    font[28].drawString("へ",Mpos[28].x,Mpos[28].y);
-                    font[29].drawString("ほ",Mpos[29].x,Mpos[29].y);
-                } //うまく動かない 消えたまま出てきて手に認識されて音が出てしまう
-                ofSetColor(200, 40, 100,200);
-                ofDrawCircle(Mpos[j].x, Mpos[j].y,30);
+            for(int i=0;i<24;i++){
+                if(Mpos[i].x-10<p.x && p.x<Mpos[i].x+50 && Mpos[i].y-10<p.y && p.y<Mpos[i].y+50){
+                    soundplayer[a].play();
+                    ofSetColor(255, 20, 147);
+                    ofDrawCircle(Mpos[i].x+20, Mpos[i].y-20, 50);
+                    Mpos[i].y = -100;
+                
+                    if(Mpos[i].y < -150){
+                        Mpos[i].y = 500;
+                    }
             }
             }
         }
     }
     //Sound end
     
+    for(int i=0;i<8;i++){
+        ofDrawBitmapString(soundplayer[0].getVolume(), 20, 20);
+        ofDrawBitmapString(soundplayer[1].getVolume(), 20, 40);
+        ofDrawBitmapString(soundplayer[2].getVolume(), 20, 60);
+        ofDrawBitmapString(soundplayer[3].getVolume(), 20, 80);
+        ofDrawBitmapString(soundplayer[4].getVolume(), 90, 20);
+        ofDrawBitmapString(soundplayer[5].getVolume(), 90, 40);
+        ofDrawBitmapString(soundplayer[6].getVolume(), 90, 60);
+        ofDrawBitmapString(soundplayer[7].getVolume(), 90, 80);
+        
+    }
     
-    //FrameRateを描いてくれるやつ
-    //ofDrawBitmapString(ofToString(ofGetFrameRate()), 10,10);
-    
+    //音がドしか出てない　あまりをうまく使えていない　fontSize　soundplayer play setVolumeをいじる
     
 }
 
