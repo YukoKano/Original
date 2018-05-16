@@ -37,8 +37,6 @@ void ofApp::setup(){
     kinect.start();
     
     maskedImage.allocate(640, 480, OF_IMAGE_COLOR_ALPHA);
-
-    
     //Kinect end
 
     
@@ -66,6 +64,7 @@ void ofApp::setup(){
     for (int i=0; i<8; i++) {
         soundplayer[i].setLoop(false);
     }
+    
     
     
     //Sound end
@@ -116,11 +115,6 @@ void ofApp::update(){
         }
     }
     //Moji end
-    
-    for (int i=0; i<24; i++){
-            soundplayer[a].setVolume(ofMap(fontSize[i], 20, 96, 0.3, 1.0));
-    }
-    
     
 }
 
@@ -178,6 +172,16 @@ void ofApp::draw(){
             
             for(int i=0;i<24;i++){
                 if(Mpos[i].x-10<p.x && p.x<Mpos[i].x+50 && Mpos[i].y-10<p.y && p.y<Mpos[i].y+50){
+                    int a=ofRandom(0,7);
+                    if(fontSize[i]<40){
+                        soundplayer[a].setVolume(0.2);
+                    }else if(fontSize[i]>=40&&fontSize[i]<60){
+                        soundplayer[a].setVolume(0.4);
+                    }else if(fontSize[i]>=60&&fontSize[i]<80){
+                        soundplayer[a].setVolume(0.6);
+                    }else if(fontSize[i]>=80&&fontSize[i]<100){
+                        soundplayer[a].setVolume(0.8);
+                    }
                     soundplayer[a].play();
                     ofSetColor(255, 20, 147);
                     ofDrawCircle(Mpos[i].x+20, Mpos[i].y-20, 50);
@@ -191,19 +195,7 @@ void ofApp::draw(){
         }
     }
     //Sound end
-    
-    for(int i=0;i<8;i++){
-        ofDrawBitmapString(soundplayer[0].getVolume(), 20, 20);
-        ofDrawBitmapString(soundplayer[1].getVolume(), 20, 40);
-        ofDrawBitmapString(soundplayer[2].getVolume(), 20, 60);
-        ofDrawBitmapString(soundplayer[3].getVolume(), 20, 80);
-        ofDrawBitmapString(soundplayer[4].getVolume(), 90, 20);
-        ofDrawBitmapString(soundplayer[5].getVolume(), 90, 40);
-        ofDrawBitmapString(soundplayer[6].getVolume(), 90, 60);
-        ofDrawBitmapString(soundplayer[7].getVolume(), 90, 80);
-        
-    }
-    
+
     //音がドしか出てない　あまりをうまく使えていない　fontSize　soundplayer play setVolumeをいじる
     
 }
